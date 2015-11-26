@@ -20,9 +20,10 @@ env = Environment(loader=FileSystemLoader(join(dirname(__file__),
 class Viz(webapp2.RequestHandler):
 
     attributes = ['amplitude', 'phase', 'similarity',
-                  'energy', 'band1','band2', 'band3',
+                  'energy', 'band1', 'band2', 'band3',
                   'intercept', 'gradient', 'none']
-        
+
+
 class MainHandler(Viz):
 
     def get(self):
@@ -33,6 +34,7 @@ class MainHandler(Viz):
 
         self.response.out.write(html)
 
+
 class AttributeHandler(Viz):
 
     def get(self):
@@ -41,11 +43,15 @@ class AttributeHandler(Viz):
 
         self.response.out.write(json.dumps(self.attributes))
 
+
+class ScatterHandler(Viz):
+
+
 class vDHandler(Viz):
 
     def get(self):
 
-        data = [np.random.randn(50,50).tolist()]
+        data = np.random.randn(3, 50, 50).tolist()
 
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(data))

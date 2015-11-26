@@ -19,5 +19,8 @@
   },
   "devDependencies": {
     "angular-bootstrap": "~0.13.3"
+  },
+  "resolutions": {
+    "angular": "1.4.8"
   }
 }
