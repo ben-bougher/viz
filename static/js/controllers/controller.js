@@ -43,7 +43,7 @@ app.controller('controller', function ($http, $alert, $timeout) {
   var hsv_group = canvas.append('g')
 	.attr('transform', 'translate(250,20)');
 
-  var hsv_text = hsv_group.selectAll('text').data(['hue', 'saturation', 'value']).enter()
+    var hsv_text = hsv_group.selectAll('text').data(['None', 'None', 'None']).enter()
 	.append('text')
 	.text(function(d){return d})
 	.attr("font-family", "sans-serif")
@@ -110,22 +110,61 @@ app.controller('controller', function ($http, $alert, $timeout) {
 
   // Make the first scatter plot
   var s1Plot = g3.plot("#s1")
-        .height(80)
-
-        .width(80)
-        .xTickFormat("")
-        .x2TickFormat("")
-        .y2TickFormat("")
-	.margin(10,10,5,40)
-        .draw();
+      .height(80)
+      .xDomain([-3,3])
+      .yDomain([-3,3])
+      .width(80)
+      .yTitle("None")
+      .xTitle("None")
+      .xTickFormat("")
+      .x2TickFormat("")
+      .y2TickFormat("")
+      .yTickFormat("")
+      .margin(20,40,40,40)
+      .draw();
   
-  var s1SVG = s1Plot.svg()
 
-  s1SVG.on('mouseup', function(){
-    if(drag_active){
-      scatterCallback(s1Plot);
-    }});
-  
+    var xTitle = s1Plot.getElement('xTitle');
+    xTitle.on('mouseup', 
+	      function(){
+		  if(drag_active){
+		      s1Plot.xTitle(dummy_text.text());
+		      scatterCallback(s1Plot);
+		  }});
+
+	xTitle.on('mouseover', 
+	    function(){
+		if(drag_active){
+		    s1Plot.getElement('xTitle').text(dummy_text.text());
+		}});
+	xTitle.on('mouseout', 
+	    function(){
+		if(drag_active){
+		    s1Plot.getElement('xTitle').text(s1Plot.xTitle());
+		}});
+
+
+    xTitle = s1Plot.getElement('yTitle');
+    xTitle.on('mouseup', 
+	      function(){
+		  if(drag_active){
+		      s1Plot.yTitle(dummy_text.text());
+		      scatterCallback(s1Plot);
+		  }});
+
+	xTitle.on('mouseover', 
+	    function(){
+		if(drag_active){
+		    s1Plot.getElement('yTitle').text(dummy_text.text());
+		}});
+	xTitle.on('mouseout', 
+	    function(){
+		if(drag_active){
+		    s1Plot.getElement('yTitle').text(s1Plot.yTitle());
+		}});
+
+
+
   // Make the second scatter plot
   var s2Plot = g3.plot("#s2")
         .height(80)
@@ -133,10 +172,53 @@ app.controller('controller', function ($http, $alert, $timeout) {
         .xTickFormat("")
         .x2TickFormat("")
         .y2TickFormat("")
-	.margin(10,10,5,40)
+      .yTitle("None")
+      .x2Title("None")
+      .xDomain([-3,3])
+      .yDomain([-3,3])
+      .yTickFormat("")
+	.margin(10,40,40,40)
         .draw();
 
 
+    xTitle = s2Plot.getElement('x2Title');
+    xTitle.on('mouseup', 
+	      function(){
+		  if(drag_active){
+		      s2Plot.x2Title(dummy_text.text());
+		      scatterCallback(s2Plot);
+		  }});
+
+	xTitle.on('mouseover', 
+	    function(){
+		if(drag_active){
+		    s2Plot.getElement('x2Title').text(dummy_text.text());
+		}});
+	xTitle.on('mouseout', 
+	    function(){
+		if(drag_active){
+		    s2Plot.getElement('x2Title').text(s2Plot.x2Title());
+		}});
+
+
+    xTitle = s2Plot.getElement('yTitle');
+    xTitle.on('mouseup', 
+	      function(){
+		  if(drag_active){
+		      s2Plot.yTitle(dummy_text.text());
+		      scatterCallback(s2Plot);
+		  }});
+
+	xTitle.on('mouseover', 
+	    function(){
+		if(drag_active){
+		    s2Plot.getElement('yTitle').text(dummy_text.text());
+		}});
+	xTitle.on('mouseout', 
+	    function(){
+		if(drag_active){
+		    s2Plot.getElement('yTitle').text(s2Plot.yTitle());
+		}});
   // Callback functions
   var vDCallback = function vDCallback(){
 
@@ -158,7 +240,7 @@ app.controller('controller', function ($http, $alert, $timeout) {
       function(resp){
 
         var data = resp.data;
-        g3.Scatter(plot, data).draw();
+        g3.scatter(plot, data).draw();
       }
     );
   };

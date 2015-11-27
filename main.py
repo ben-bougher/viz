@@ -46,6 +46,16 @@ class AttributeHandler(Viz):
 
 class ScatterHandler(Viz):
 
+    def get(self):
+
+
+        data = np.random.randn(50,2).tolist()
+
+
+        self.response.headers["Content-Type"] = 'application/json'
+
+        self.response.out.write(json.dumps(data))
+
 
 class vDHandler(Viz):
 
@@ -59,7 +69,8 @@ class vDHandler(Viz):
 
 app = webapp2.WSGIApplication([('/', MainHandler),
                                ('/attributes', AttributeHandler),
-                               ('/vd_data', vDHandler)],
+                               ('/vd_data', vDHandler),
+                               ('/scatter_data', ScatterHandler)],
                               debug=False)
 
 

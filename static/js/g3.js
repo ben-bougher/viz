@@ -755,6 +755,11 @@
     }
   };
 
+    plot.prototype.getElement = function(elem){
+
+	return this._svg.select('#' + elem)
+    };
+
   plot.prototype.setTitles = function(){
     if(this._xTitle){
       if(this._xTickFormat === ""){
@@ -767,12 +772,13 @@
         .attr("y", margin)
         .style("text-anchor", "middle")
         .style("font-size", 12)
+	 .attr('id', 'xTitle')
         .text(this._xTitle);
     }
 
     if(this._yTitle){
       if(this._yTickFormat === ""){
-        var yMargin = -10;
+        var yMargin = -20;
       } else {
         var yMargin = -40;
       }
@@ -781,6 +787,7 @@
         .attr("transform", "rotate(-90)")
         .attr("y", yMargin)
         .attr("dy", "1em")
+	 .attr('id', 'yTitle')
         .style("text-anchor", "end")
         .style("font-size", 12)
         .text(this._yTitle);
@@ -788,7 +795,7 @@
 
     if(this._x2Title){
       if(this._x2TickFormat === ""){
-        var margin = 10;
+        var margin = 20;
       } else {
         var margin = 30;
       }
@@ -797,6 +804,7 @@
         .attr("transform", "translate(" + "0," + this._height + ")")
         .attr("x", (this._width) / 2)
         .attr("y", margin)
+	    .attr('id','x2Title')
         .style("text-anchor", "middle")
         .style("font-size", 12)
         .text(this._x2Title);
@@ -804,7 +812,7 @@
 
     if(this._y2Title){
       if(this._yTickFormat === ""){
-        var yMargin = -10;
+        var yMargin = -20;
       } else {
         var yMargin = -40;
       }
@@ -813,12 +821,14 @@
         .attr("transform", "translate(" + "0," + this._height + ")")
         .attr("y", yMargin)
         .attr("dy", "1em")
+	    .attr('id', 'y2Title')
         .style("text-anchor", "end")
         .style("font-size", 12)
         .text(this._y2Title);
     }
   };
 
+plot.prototype
   plot.prototype.draw = function() {
     this.setScales();
     this._svg = this.createSVG();
@@ -938,7 +948,6 @@
     return new scatter(plot, data);
   };
   var scatter = function scatter(plot, data){
-    if(!data || !$.isArray(data)){ return 'Param: data is missing, An array required'; }
     if(!plot){ return 'Param: plot is missing, a div to attach the svg is required'; }
 
     this._data = data;
@@ -951,10 +960,15 @@
 
     this._svg = this._plot._svg;
 
+      var plot = this._plot;
     this._svg.selectAll('circle').data(this._data)
       .enter().append('circle')
-      .attr('x', function(d){return d.x;})
-      .attr('y', function(d){return d.y;});
+      .attr('cx', function(d){
+	  return plot._xScale(d[0]);})
+      .attr('cy', function(d){
+	  return plot._yScale(d[1]);})
+	  .attr('r', 2);
+
     return this;
   };
 
