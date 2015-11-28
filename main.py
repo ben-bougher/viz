@@ -20,8 +20,7 @@ env = Environment(loader=FileSystemLoader(join(dirname(__file__),
 class Viz(webapp2.RequestHandler):
 
     attributes = ['amplitude', 'phase', 'similarity',
-                  'energy', 'band1', 'band2', 'band3',
-                  'intercept', 'gradient', 'none']
+                  'energy', 'intercept', 'gradient']
 
 
 class MainHandler(Viz):
@@ -35,26 +34,21 @@ class MainHandler(Viz):
         self.response.out.write(html)
 
 
-class AttributeHandler(Viz):
+class DataHandler(Viz):
 
     def get(self):
 
         self.response.headers['Content-Type'] = 'application/json'
 
-        self.response.out.write(json.dumps(self.attributes))
+        output = {}
+        output["attributes"] = self.attributes
 
+        output["data"] = []
 
-class ScatterHandler(Viz):
-
-    def get(self):
-
-
-        data = np.random.randn(50,2).tolist()
-
-
-        self.response.headers["Content-Type"] = 'application/json'
-
-        self.response.out.write(json.dumps(data))
+        for point in range(500):
+            output["data"].append({attr: np.random.randn() for attr in self.attributes})
+            
+        self.response.out.write(json.dumps(output))
 
 
 class vDHandler(Viz):
@@ -68,9 +62,8 @@ class vDHandler(Viz):
 
 
 app = webapp2.WSGIApplication([('/', MainHandler),
-                               ('/attributes', AttributeHandler),
-                               ('/vd_data', vDHandler),
-                               ('/scatter_data', ScatterHandler)],
+                               ('/data', DataHandler),
+                               ('/vd_data', vDHandler)],
                               debug=False)
 
 
