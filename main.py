@@ -76,7 +76,19 @@ class DataHandler(Viz):
                    "FI": fi}
                 
             output["data"].append(dic)
-            
+
+            output["min"] = {"amplitude": np.amin(A.flatten()[::25]),
+                             "similarity": np.amin(C.flatten()[::25]),
+                             "gradient": np.amin(gradient.flatten()[::25]),
+                             "intercept": np.amin(intercept.flatten()[::25]),
+                             "FI": np.amin(FI.flatten()[::25])}
+
+            output["max"] = {"amplitude": np.amax(A.flatten()[::25]),
+                             "similarity": np.amax(C.flatten()[::25]),
+                             "gradient": np.amax(gradient.flatten()[::25]),
+                             "intercept": np.amax(intercept.flatten()[::25]),
+                             "FI": np.amax(FI.flatten()[::25])}
+                             
         self.response.out.write(json.dumps(output))
 
 
@@ -92,7 +104,7 @@ class vDHandler(Viz):
         
         output = {}
         output["attr1"] = (attr1 / np.amax(np.abs(attr1))).tolist()
-        output["attr2"] = attr2.tolist()
+        output["attr2"] = np.abs(attr2).tolist()
         output["cbar1"] = np.linspace(-1, 1, 10).tolist()
         output["cbar2"] = (1 - np.linspace(0, .5, 10)).tolist()[::-1]
    

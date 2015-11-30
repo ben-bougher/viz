@@ -13,9 +13,8 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
       var svg = $scope.vDPlot._plot.svg();
       $scope.cbar = initializeCBar(svg, resp.data.cbar1,resp.data.cbar2);
       $scope.svg = svg;
-      $scope.scatterMatrix = initializeScatterMatrix(resp.data.attributes, 
-						     resp.data.data, svg);
-      $scope.scatter = initializeScatter(svg, resp.data.data);
+      $scope.scatterMatrix = initializeScatterMatrix(resp.data, svg);
+      $scope.scatter = initializeScatter(svg, resp.data);
       
       $scope.attributes = resp.data.attributes;
       $scope.data = resp.data.data;
@@ -57,10 +56,10 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
     // Make the first scatter plot
     var s1Plot = g3.plot('#scatter')
 	  .height(275.0)
-	  .xDomain([-1,1])
-	  .yDomain([-1,1])
-          .xTitle('amplitude')
-          .yTitle('similarity')
+	  .xDomain([data.min.similarity,data.max.similarity])
+	  .yDomain([data.min.amplitude, data.max.amplitude])
+          .xTitle('similarity')
+          .yTitle('amplitude')
 	  .width(275)
 	  .xTickFormat("")
 	  .x2TickFormat("")
@@ -69,23 +68,29 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	  .margin(20,40,40,40)
 	  .draw();
 
-    var scatter = g3.scatter(s1Plot, data).draw('similarity', 'amplitude');
+    var scatter = g3.scatter(s1Plot, data.data).draw('similarity', 'amplitude');
     return scatter;
   };
 
-  var initializeScatterMatrix = function(attributes, data, canvas){
+  var initializeScatterMatrix = function(resp, canvas){
 
 
+    var attributes = resp.attributes;
+    var data = resp.data;
     var plots = [];
 
     var scopeFunc = function(primary_attr, secondary_attr){
       var prime = primary_attr;
       var second = secondary_attr;
       var updateScatter = function(){
-	$scope.scatter._plot.yTitle(prime).xTitle(second);
+	$scope.scatter._plot.yTitle(prime).xTitle(second)
+          .xDomain([resp.min[primary_attr], resp.max[primary_attr]])
+	  .yDomain([resp.min[secondary_attr], resp.max[secondary_attr]])
+          .setScales();
 	$scope.scatter.reDraw(prime, second);
-	$scope.scatter._plot.getElement('yTitle').text(prime);
-	$scope.scatter._plot.getElement('xTitle').text(second);
+        
+	$scope.scatter._plot.getElement('xTitle').text(prime);
+	$scope.scatter._plot.getElement('yTitle').text(second);
       };
       return updateScatter;
     };
@@ -96,19 +101,19 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
       .attr("transform", "translate(700,0)");
     
     for(var i=0; i<attributes.length; i++){
-      var primary_attr = attributes[i];
+      var secondary_attr = attributes[i];
       
       for(var j=1; j< attributes.length - i; j++){
-	var secondary_attr = attributes[i+j];
+	var primary_attr = attributes[i+j];
 	var y2Title = "";
 	var xTitle = "";
 	var yMarg = 20;
 
 	if(i===0){
-	  xTitle = secondary_attr;
+	  xTitle = primary_attr;
 	};
 	if((i+j)===(attributes.length-1)){
-	  y2Title = primary_attr;
+	  y2Title = secondary_attr;
 	  yMarg = 30;
 	};
 
@@ -116,8 +121,8 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	var xPos = (i + j) * 60 + 20;
 	var plot =  g3.plot('#small_multiples')
 	      .height(50)
-	      .xDomain([-1,1])
-	      .yDomain([-1,1])
+	      .xDomain([resp.min[primary_attr], resp.max[primary_attr]])
+	      .yDomain([resp.min[secondary_attr], resp.max[secondary_attr]])
 	      .width(50)
 	      .y2Title(y2Title)
 	      .xTitle(xTitle)
@@ -137,10 +142,10 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 
         
         plot.getElement('xTitle').attr("cursor", "grab")
-          .data([secondary_attr])
+          .data([primary_attr])
           .call($scope.drag);
         plot.getElement('y2Title').attr("cursor", "grab")
-          .data([primary_attr])
+          .data([secondary_attr])
           .call($scope.drag);
 
 	

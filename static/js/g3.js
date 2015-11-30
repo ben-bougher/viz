@@ -821,11 +821,11 @@
       }
 
       this._svg.append("text")
-        .attr("transform", "translate(" +this._width + ","+this._height +") rotate(90)")
+        .attr("transform", "translate(" +this._width + ",0) rotate(90)")
 	.attr("y", yMargin)
 	.attr("dy", "1em")
 	.attr('id', 'y2Title')
-	.style("text-anchor", "end")
+	.style("text-anchor", "start")
 	.style("font-size", 12)
 	.text(this._y2Title);
     }
@@ -985,7 +985,7 @@
     
     // existing elements
     points.transition().attr('cx', function(d){return plot._xScale(d[primary]);})
-      .attr('cy', function(d){return plot._yScale(d[secondary]);})
+      .attr('cy', function(d){return plot._yScale(d[secondary]);});
     return this;
   };
   
