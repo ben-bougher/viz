@@ -15,28 +15,28 @@
 
 
   // Attach canvas creation function to g3
-  g3.canvas = function(plot, data, pad){
-    return new canvas(plot, data, pad);
+  g3.canvas = function(elem, data, width, height, top, left){
+    return new canvas(elem,data, width, height, top, left);
   };
 
   // Constructor
   // Only set variables that are set by items passed in, otherwise set using prototype
-  var canvas = function canvas(plot, data, pad){
+  var canvas = function canvas(elem, data, width, height, top, left){
     if(!data || !$.isArray(data)){ return 'Param: data is missing, An array required'; }
-    if(!plot){ return 'Param: plot is missing, a div to attach the svg is required'; }
+
     this._data = data;
-    this._plot = plot;
-    var padding = $(this._plot._elem).css('padding-left');
+  
+    var padding = $(elem).css('padding-left');
     padding = Number(padding.replace('px', ''));
-    this._canvas = d3.select(this._plot._elem)
+    this._canvas = d3.select(elem)
       .append('canvas')
       .attr('width', this._data[0].length)
       .attr('height', this._data[0][0].length)
-      .style('width', this._plot._width +  'px')
-      .style('height', this._plot._height + 'px')
+      .style('width', width +  'px')
+      .style('height', height + 'px')
       .style('opacity', this._opacity)
-      .style('top', this._plot._margin.top +pad[0] +  'px')
-      .style('left', this._plot._margin.left + padding + pad[1] + 'px');
+      .style('top', top +  'px')
+      .style('left', left + padding + 'px');
     return this;
   };
 
@@ -886,18 +886,17 @@
   };
 
   // Attach seismic creation function to g3
-  g3.seismic = function(plot, data, pad){
-    return new seismic(plot, data, pad);
+  g3.seismic = function(plot, data){
+    return new seismic(plot, data);
   };
 
   // Constructor
   // Only set variables that are set by items passed in, otherwise set using prototype
-  var seismic = function seismic(plot, data, pad){
+  var seismic = function seismic(plot, data){
     if(!data || !$.isArray(data)){ return 'Param: data is missing, An array required'; }
     if(!plot){ return 'Param: plot is missing, a div to attach the svg is required'; }
     this._data = data;
     this._plot = plot;
-    this._pad = pad;
     return this;
   };
 
@@ -933,9 +932,11 @@
 
   // Draw method
   seismic.prototype.draw = function(){
-    this._canvas = g3.canvas(this._plot, this._data, this._pad)
-      .gain(this._gain)
-      .draw();
+    this._canvas = g3.canvas(this._plot._elem, this._data, this._plot._width,
+			     this._plot._height, this._plot._margin.top,
+			     this._plot._margin.left)
+	  .gain(this._gain)
+	  .draw();
     return this;
   };
 
@@ -984,7 +985,8 @@
     var points = this._svg.selectAll('circle');
     
     // existing elements
-    points.transition().attr('cx', function(d){return plot._xScale(d[primary]);})
+    points.transition().duration(1500)
+	  .attr('cx', function(d){return plot._xScale(d[primary]);})
       .attr('cy', function(d){return plot._yScale(d[secondary]);});
     return this;
   };
