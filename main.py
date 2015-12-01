@@ -20,14 +20,14 @@ env = Environment(loader=FileSystemLoader(join(dirname(__file__),
 
 class Viz(webapp2.RequestHandler):
 
-    attributes = ['FI', 'similarity',
+    attributes = ['Q', 'similarity',
                   'amplitude', 'intercept', 'gradient']
 
     file_dict = {"similarity": "cont.npy",
                  "amplitude": "amp_slice.npy",
                  "gradient": "gradient.npy",
                  "intercept": "intercept.npy",
-                 "FI": "FI.npy"}
+                 "Q": "FI.npy"}
 
 
 class MainHandler(Viz):
@@ -64,7 +64,7 @@ class DataHandler(Viz):
         image_data["similarity"] = C[::5, ::5].tolist()
         image_data["gradient"] = gradient[::5, ::5].tolist()
         image_data["intercept"] = intercept[::5, ::5].tolist()
-        image_data["FI"] = FI[::5, ::5].tolist()
+        image_data["Q"] = FI[::5, ::5].tolist()
 
         output["image_data"] = image_data
         
@@ -75,19 +75,19 @@ class DataHandler(Viz):
                          "similarity":0,
                          "gradient": -10*np.std(gradient),
                          "intercept": -1*np.std(intercept),
-                         "FI": -30*np.std(FI)}
+                         "Q": -30*np.std(FI)}
 
         output["max"] =  {"amplitude": 10*np.std(A),
                          "similarity": 1,
                          "gradient": 1*np.std(gradient),
                          "intercept": 10*np.std(intercept),
-                         "FI": 0*np.std(FI)}
+                         "Q": 0*np.std(FI)}
 
         output["cmap"] =  {"amplitude": "div",
                             "similarity": "seq",
                             "gradient":"seq",
                             "intercept": "seq",
-                            "FI": "seq"}
+                            "Q": "seq"}
 
         for amp, cont, grad, inter, fi in zip(A.flatten()[::50],
                                               C.flatten()[::50],
@@ -102,8 +102,8 @@ class DataHandler(Viz):
                                        output["max"]["gradient"]),
                    "intercept": np.clip(inter,output["min"]["intercept"],
                                         output["max"]["intercept"]),
-                   "FI": np.clip(fi, output["min"]["FI"],
-                                     output["max"]["FI"])}
+                   "Q": np.clip(fi, output["min"]["Q"],
+                                     output["max"]["Q"])}
                 
             output["data"].append(dic)
 
