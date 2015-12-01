@@ -60,7 +60,7 @@ class DataHandler(Viz):
         output["data"] = []
         image_data = {}
 
-        image_data["amplitude"] = A[::5,::5].tolist()
+        image_data["amplitude"] = A[::5, ::5].tolist()
         image_data["similarity"] = C[::5, ::5].tolist()
         image_data["gradient"] = gradient[::5, ::5].tolist()
         image_data["intercept"] = intercept[::5, ::5].tolist()
@@ -68,7 +68,7 @@ class DataHandler(Viz):
 
         output["image_data"] = image_data
         
-        output["cbar1"] = np.linspace(-1, 1, 10).tolist()
+        output["cbar1"] = np.linspace(np.amin(A), np.amax(A), 10).tolist()
         output["cbar2"] = (1 - np.linspace(0.0, 1, 10)).tolist()[::-1]
 
         output["min"] = {"amplitude": -10*np.std(A),
@@ -125,11 +125,20 @@ class vDHandler(Viz):
         output = {}
         output["attr1"] = attr1.tolist()
         output["attr2"] = attr2.tolist()
-        output["cbar1"] = np.linspace(-1, 1, 10).tolist()
-        output["cbar2"] = (1 - np.linspace(0, .5, 10)).tolist()[::-1]
+
+        cbar1 = np.linspace(np.amin(attr1), np.amax(attr1), 10).tolist()
+
+        if(attr1_id == attr2_id):
+            cbar2 = np.ones(10).tolist()
+        else:
+            cbar2 = (np.amax(attr2) - np.linspace(np.amin(attr2), np.amax(attr2), 10)).tolist()[::-1]
+            
+        output["cbar1"] = cbar1
+        output["cbar2"] = cbar2
    
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(output))
+
 
 class MaskHandler(Viz):
 
@@ -138,18 +147,19 @@ class MaskHandler(Viz):
         attr1_id = self.request.get("attr1")
         attr2_id = self.request.get("attr2")
 
-        at1_clip1 = self.request.get("attr1_clip1")
-        at1_clip2 = self.request.get("attr1_clip2")
-        at2_clip1 = self.request.get("attr2_clip1")
-        at2_clip2 = self.request.get("attr2_clip2")
+        at1_clip1 = float(self.request.get("attr1_clip1"))
+        at1_clip2 = float(self.request.get("attr1_clip2"))
+        at2_clip1 = float(self.request.get("attr2_clip1"))
+        at2_clip2 = float(self.request.get("attr2_clip2"))
 
         attr1 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr1_id]))).T
         attr2 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr2_id]))).T
-    
+   
         x = np.zeros(attr1.shape)
         y = np.ones(attr1.shape)
 
-        clip_index = (attr1 > at1_clip1) & (attr1 < at1_clip2) & (attr2 > at2_clip1) & (attr2 < at2_clip2)
+        clip_index = ((attr1 > at1_clip1) & (attr1 < at1_clip2) &
+                      (attr2 > at2_clip1) & (attr2 < at2_clip2))
 
         mask = np.where(clip_index, y, x)
         print np.sum(clip_index)
@@ -161,7 +171,7 @@ class MaskHandler(Viz):
 app = webapp2.WSGIApplication([('/', MainHandler),
                                ('/data', DataHandler),
                                ('/vd_data', vDHandler),
-                               ('/mask', MaskHandler) ],
+                               ('/mask', MaskHandler)],
                               debug=False)
 
 

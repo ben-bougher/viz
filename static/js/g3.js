@@ -15,17 +15,18 @@
 
 
   // Attach canvas creation function to g3
-  g3.canvas = function(elem, data, width, height, top, left){
-    return new canvas(elem,data, width, height, top, left);
+  g3.canvas = function(elem, data, width, height, top, left, mask){
+    return new canvas(elem,data, width, height, top, left, mask);
   };
 
   // Constructor
   // Only set variables that are set by items passed in, otherwise set using prototype
-  var canvas = function canvas(elem, data, width, height, top, left){
+  var canvas = function canvas(elem, data, width, height, top, left,
+                              maskBool){
     if(!data || !$.isArray(data)){ return 'Param: data is missing, An array required'; }
 
     this._data = data;
-  
+    this.maskBool = maskBool;
     var padding = $(elem).css('padding-left');
     padding = Number(padding.replace('px', ''));
     this._canvas = d3.select(elem)
@@ -35,9 +36,23 @@
       .style('width', width +  'px')
       .style('height', height + 'px')
       .style('opacity', this._opacity)
+      .style('z-index', 1)
       .style('top', top +  'px')
       .style('left', left + padding + 'px');
-    return this;
+
+    if(maskBool){
+    this._mask = d3.select(elem)
+      .append('canvas')
+      .attr('width', this._data[0].length)
+      .attr('height', this._data[0][0].length)
+      .style('width', width +  'px')
+      .style('height', height + 'px')
+        //.style('opacity', .5)
+      .style('z-index', 2)
+      .style('top', top +  'px')
+        .style('left', left + padding + 'px');
+    }
+      return this;
   };
 
   canvas.prototype._gain = 1;
@@ -65,6 +80,10 @@
     var node = this._canvas.node();
     this._context = this._canvas.node().getContext('2d');
     this.drawImage();
+
+    if(this.maskBool){
+      this._maskContext = this._mask.node().getContext('2d');
+    }
     return this;
   };
 
@@ -76,6 +95,45 @@
     this._data = data;
     this.drawImage();
     return this;
+  };
+
+  canvas.prototype.drawMask = function(mask){
+    this._maskContext.clearRect(0, 0,
+                                mask[0].length,
+                                mask[0][0].length);
+    this._mask
+      .attr('width', mask[0].length)
+      .attr('height', mask[0][0].length);
+
+     var x = mask[0].length,
+	y = mask[0][0].length;
+    this._maskImage = this._maskContext.createImageData(x,y);
+    
+
+    var colorbar = d3.scale.linear().domain([0,1])
+          .range(['white', 'yellow']);
+    
+    var r, g, b,a;
+    for(var i = 0, p = -1; i < y; ++ i){
+      for(var j = 0; j < x; ++j){
+	r = 0, g = 0, b = 0;
+	for(var k = 0; k < mask.length; k++){
+	  var d = d3.rgb((colorbar(mask[k][j][i])));
+	  r = r + (d.r / 255);
+	  g = g + (d.g / 255);
+	  b = b + (d.b / 255);
+          a = mask[k][j][i]*100;
+	}
+	this._maskImage.data[++p] = r * 255;
+	this._maskImage.data[++p] = g * 255;
+	this._maskImage.data[++p] = b * 255;
+	this._maskImage.data[++p] = a;
+      }
+    }
+    this._maskContext.putImageData(this._maskImage, 0,0);
+
+    return this;
+    
   };
 
   canvas.prototype.drawImage = function(){
@@ -934,7 +992,7 @@
   seismic.prototype.draw = function(){
     this._canvas = g3.canvas(this._plot._elem, this._data, this._plot._width,
 			     this._plot._height, this._plot._margin.top,
-			     this._plot._margin.left)
+			     this._plot._margin.left, true)
 	  .gain(this._gain)
 	  .draw();
     return this;
@@ -945,7 +1003,9 @@
       .reDraw(data);
   };
 
-
+  seismic.prototype.drawMask = function(mask){
+    this._canvas.drawMask(mask);
+  };
 
   // Scatter plot class
   g3.scatter = function(plot, data){
