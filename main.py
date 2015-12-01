@@ -13,6 +13,11 @@ from os.path import dirname, join
 import json
 import numpy as np
 
+from google.appengine.ext import db
+
+
+class Feedback(db.Model):
+    comment = db.TextProperty
 
 env = Environment(loader=FileSystemLoader(join(dirname(__file__),
                                                'templates')))
@@ -167,11 +172,29 @@ class MaskHandler(Viz):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps({"mask": mask.tolist()}))
 
+
+class FeedbackHandler(Viz):
+
+    def get(self):
+        
+        template = env.get_template('feedback.html')
+        html = template.render()
+
+        self.response.out.write(html)
+
+    def post(self):
+
+        comment = str(self.request.get("feedback"))
+
+        Feedback(comment=comment)
+
+        self.response.out.write("Thanks!")
         
 app = webapp2.WSGIApplication([('/', MainHandler),
                                ('/data', DataHandler),
                                ('/vd_data', vDHandler),
-                               ('/mask', MaskHandler)],
+                               ('/mask', MaskHandler),
+                               ('/feedback', FeedbackHandler)],
                               debug=False)
 
 
