@@ -111,11 +111,11 @@ measured seismic attribute data from the open F3 seismic data set.
 
 
 %% Uncomment below to include a teaser figure.
-%%  \teaser{
-% \centering
-% \includegraphics[width=16cm]{CypressView}
-%  \caption{In the Clouds: Vancouver from Cypress Mountain.}
-%  }
+  \teaser{
+ \centering
+ \includegraphics[width=16cm]{full_view}
+  \caption{Geophyzviz: Interactive attribute analysis.}
+  }
 
 %% Uncomment below to disable the manuscript note
 %\renewcommand{\manuscriptnotetxt}{}
@@ -183,24 +183,27 @@ points on the scatter plot, which are then superimposed on the seismic image to 
 instant geospatial cross-referencing. Geophyzviz is hosted as an open-source project on github
 and currently serving as a public facing web-app at http://www.geophyzviz.appspot.com.
 
+
+
 \section{Previous work}
+
 
 There are several existing commercial software packages for seismic attribute analysis, the
 two most popular being Schlumberger's Petrel and CGG's Hampson-Russel. Both these packages
 focus on two specific attributes and do not generalize to the entire multivariate attribute space.
 Viewing geospatial referencing of attributes is poorly linked to the actual seismic image and requires
-generating and loading new data sets. The software has nested menus and controls for interacting
+generating and loading new data sets. The software has nested menus and controls for navigation
 which requires the analyst to switch focus from the data. The work-flow for analyzing two attributes
-using Petrel is documented in the tutorial video, which can serve as a benchmark for user experience.
+using Petrel is documented in the tutorial video \cite{petrel-vid}, which can serve as a benchmark for user experience.
 
-The idea to co-render attributes in the seismic image was inspired by a blog post by Evan Bianco, but is
-also documented in the geophysical literature. Each seismic attribute is designed to exploit different
+The idea to co-render attributes in the seismic image was inspired by a blog post by Evan Bianco \cite{bianco-2015}, but is
+also documented in the geophysical literature \cite{chopra-attr}. Each seismic attribute is designed to exploit different
 properties, for example similarity will highlight faults and fractures while the attenuation (Q) attribute
 can indicate the presence of a fluid. Co-rendering two attributes lets the analyst looks for interesting
 regions that would not pop out if each attribute was displayed independently.
 
 The literature on seismic attribute visualization is sparse, but there has been much work in
-generalized multivariate visualization. Burger and Hauser provide an overview of the current
+generalized multivariate visualization. Burger and Hauser \cite{fuchs-vom-2009} provide an overview of the current
 state of the art and describe a general set of tools for effective visualization of multivariate data.
 Geophyzviz makes use all of the tools that are relevant to seismic attributes. Geophyzviz is
 heavily interactive, uses hybrid-rendering to co-render attributes, and uses layering and fusion
@@ -208,9 +211,9 @@ to superimpose selected attributes over the seismic image. In the language of th
 the linked brushes used in Geophyzviz follow a Simviz approach to focus and context handling.
 
 Seismic attribute analysis is closely linked to hyper-spectral imaging, as they both involve
-analysis of high dimensional geospatial data. The commercial software package ENVI by
+analysis of high dimensional geospatial data. The commercial software package ENVI \cite{itt-sol} by
 exelisvis provides hyper-spectral visualization and automated image segmentation, while
-packages Gerbil and MultiSpec provide open-source options. Ideas on general visualization
+packages Gerbil \cite{gerbil} and MultiSpec \cite{multispec} provide open-source options. Ideas on general visualization
 and interactivity can borrowed from the hyper-spectral community, however there are fundamental
 differences between hyper-spectral images and seismic attributes. Hyper-spectral data is considered
 to be multidimensional, where the spectral bands are analyzed independently from each other.
@@ -222,8 +225,8 @@ also needs to display multivariate information between attributes.
 
 \begin{table}
 %% Table captions on top in journal version
- \caption{SciVis Paper Acceptance Rate: 1994-2006}
- \label{vis_accept}
+ \caption{Data abstraction}
+ \label{data_abstract}
  \scriptsize
  \begin{center}
    \begin{tabular}{cccc}
@@ -246,17 +249,17 @@ also needs to display multivariate information between attributes.
  \end{center}
 \end{table}
 
-%\begin{figure}[htb]
-% \centering
-% \includegraphics[width=1.5in]{sample}
-% \caption{Sample illustration.}
-%\end{figure}
+\begin{figure}[htb]
+\centering
+includegraphics[width=1.5in]{sample}
+\caption{Sample illustration.}
+\end{figure}
 
 \section{Data abstraction}
 A seismic volume is formed from a collection of seismic traces, where each trace
 corresponds to reflected energy vs depth at a given spatial position. The traces are processed
 to form attributes, which are are the same dimension as the seismic volume. Analysts typically
-look at cross-section of the volume called seismic images. Attributes
+look at cross-sections of the volume called seismic images. Attributes
 can themselves be plotted as an image, or plotted against each other as a scatter plot.
 
 A seismic image is a snap shot of a continuous wave field, so we use a gridded field
@@ -295,12 +298,36 @@ are faceted into juxtaposed small multiples in an overview display, which encour
 data navigation. We used diverging colour maps for +/- attributes and sequential colour maps for
 magnitude attributes.
 
+\begin{figure}[htb]
+\centering
+\includegraphics[width=3in]{corender}
+\caption{The spatial cross-section view with amplitude and similarity attributes co-rendered using a bivariate colour map.}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=3in]{corender_overview}
+\caption{The overview panel for attribute correndering views.}
+\end{figure}
+
 The scatter plot display spatially encodes the attribute values in order to visualize trends,
 correlations, outliers, and clusters. There is typically < 10 attributes in a data set, so
 the choice to display all possible scatter plots in a scatter plot matrix is a logical decision.
 The scatter plot matrix also serves as an overview, where clicking a single scatter plot changes the
 focus of the detailed view. The transitions between detailed scatter plot views is chosen to be
 a noticeably slow animation to encourage the analyst to track targets as they move between plots.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=3in]{crossplot}
+\caption{Detail view of a scatter plot of intercept and amplitude attributes.}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=3in]{scatterplot_matrix}
+\caption{Scatterplot matrix of overviewing all attribute combinations.}
+\end{figure}
 
 All the views are linked via an interactive selection brush. Analysts use a brush to
 select targets on the detailed scatter plot view. This highlights the targets in all of
@@ -348,6 +375,13 @@ mask. Ideally a valid target will form a geologically relevant shape on the imag
 The analysts can then explore attribute co-rendering options by clicking on the small multiple
 images. If a target pops out on particular attribute co-rendering views, the analyst
 can make an interpretation about the geological significance of the target.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=3in]{full_view}
+\caption{Analysis of an anamolous region.}
+\end{figure}
+
 
 \section{Discussion and future work}
 We applied principals of information visualization to address a broken

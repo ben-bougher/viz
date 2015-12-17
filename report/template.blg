@@ -2,47 +2,57 @@ This is BibTeX, Version 0.99d (TeX Live 2015/dev/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: template.aux
 The style file: abbrv.bst
-I found no \citation commands---while reading file template.aux
 Database file #1: template.bib
-You've used 0 entries,
+Warning--string name "“gerbil" is undefined
+--line 95 of file template.bib
+I was expecting a `,' or a `}'---line 95 of file template.bib
+ :   title = “gerbil 
+ :                     - A Novel Software Framework for Visualization and Analysis in the Multispectral Domain”,
+I'm skipping whatever remains of this entry
+Warning--to sort, need author or key in itt-sol
+Warning--to sort, need author or key in multispec
+Warning--empty title in gerbil
+Warning--empty booktitle in gerbil
+Warning--empty year in gerbil
+You've used 7 entries,
             2118 wiz_defined-function locations,
-            496 strings with 3705 characters,
-and the built_in function-call counts, 18 in all, are:
-= -- 0
-> -- 0
+            532 strings with 4483 characters,
+and the built_in function-call counts, 1630 in all, are:
+= -- 155
+> -- 43
 < -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 7
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
++ -- 19
+- -- 12
+* -- 99
+:= -- 254
+add.period$ -- 17
+call.type$ -- 7
+change.case$ -- 26
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
+cite$ -- 12
+duplicate$ -- 63
+empty$ -- 172
+format.name$ -- 12
+if$ -- 351
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 3
-num.names$ -- 0
-pop$ -- 0
+int.to.str$ -- 7
+missing$ -- 3
+newline$ -- 34
+num.names$ -- 10
+pop$ -- 50
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 20
 quote$ -- 0
-skip$ -- 1
+skip$ -- 48
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 88
+swap$ -- 7
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 2
+type$ -- 28
+warning$ -- 5
+while$ -- 14
+width$ -- 8
+write$ -- 65
 (There was 1 error message)

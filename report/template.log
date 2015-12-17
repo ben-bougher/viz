@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=latex 2015.8.17)  13 DEC 2015 20:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=latex 2015.8.17)  16 DEC 2015 21:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -321,10 +321,16 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 140.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 140.
+File: full_view.ps Graphic file (type eps)
+ <full_view.ps>
+Overfull \hbox (47.69846pt too wide) in paragraph at lines 140--140
+ [] []  
+ []
+
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 140.
 File: diamondrule.eps Graphic file (type eps)
- <diamondrule.eps>
+<diamondrule.eps>
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 140.
 LaTeX Font Info:    Font shape `OT1/phv/bx/sc' in size <9> not available
@@ -335,38 +341,74 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 140.
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 140.
 
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/it' in size <8> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 140.
+
+Underfull \vbox (badness 5446) has occurred while \output is active []
+
  [1
 
 
-] [2]
-(./template.bbl
+]
+[2]
+File: corender.ps Graphic file (type eps)
+ <corender.ps>
+File: corender_overview.ps Graphic file (type eps)
+ <corender_overview.ps>
+File: crossplot.ps Graphic file (type eps)
+ <crossplot.ps>
+File: scatterplot_matrix.ps Graphic file (type eps)
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
+<scatterplot_matrix.ps> [3]
+File: full_view.ps Graphic file (type eps)
+ <full_view.ps> (./template.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 4--6
+[]\OT1/ptm/m/n/8 Itt vi-sual in-for-ma-tion so-lu-tions: Envi.
+ []
+
+
+Underfull \hbox (badness 3098) in paragraph at lines 8--10
+[]\OT1/ptm/m/n/8 Multispec: A free-ware mul-ti-spec-tral im-age data anal-y-sis
+ sys-tem.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--17
+[]\OT1/ptm/m/n/8 E. Bianco.  Coren-der-ing at-tributes and 2d colourmaps.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--17
+\OT1/ptm/m/n/8 http://www.agilegeoscience.com/blog/2015/5/27/corendering-attrib
+utes-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--22
+[]\OT1/ptm/m/n/8 Cegal.  Easy seis-mic and avo anal-y-sis.
+ []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 408.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 408.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 442.
+ [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 442.
  (./template.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 408.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 408.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 442.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 442.
 Package rerunfilecheck Info: File `template.out' has not changed.
 (rerunfilecheck)             Checksum: FC7070778C95448DEFF371006ACAA193;437.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 408.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 442.
  ) 
 Here is how much of TeX's memory you used:
- 5084 strings out of 493106
- 75921 string characters out of 6137098
- 171162 words of memory out of 5000000
- 8514 multiletter control sequences out of 15000+600000
+ 5103 strings out of 493106
+ 76172 string characters out of 6137098
+ 170458 words of memory out of 5000000
+ 8527 multiletter control sequences out of 15000+600000
  24727 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,8n,29p,203b,370s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,8n,29p,236b,370s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on template.dvi (3 pages, 31644 bytes).
+Output written on template.dvi (4 pages, 39176 bytes).
