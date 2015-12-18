@@ -4,8 +4,8 @@ The top-level auxiliary file: template.aux
 The style file: abbrv.bst
 Database file #1: template.bib
 Warning--string name "“gerbil" is undefined
---line 95 of file template.bib
-I was expecting a `,' or a `}'---line 95 of file template.bib
+--line 102 of file template.bib
+I was expecting a `,' or a `}'---line 102 of file template.bib
  :   title = “gerbil 
  :                     - A Novel Software Framework for Visualization and Analysis in the Multispectral Domain”,
 I'm skipping whatever remains of this entry
