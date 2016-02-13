@@ -16,6 +16,8 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 
   $scope.init = false;
 
+
+  // Select the data using the brushes
   var search =  function(){
     
     var extent = $scope.brush.extent();
@@ -23,9 +25,12 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
     var x2 = extent[1][0];
     var y1 = extent[0][1];
     var y2 = extent[1][1];
+
     var primary = $scope.scatter._plot.getElement("xTitle").text();
     var secondary = $scope.scatter._plot.getElement("yTitle").text();
+
     $scope.scatter._plot.svg().selectAll("circle").each(function(d){
+
       if((d[primary] > x1) && (d[primary] < x2) && 
 	 (d[secondary] > y1) && (d[secondary] < y2)){
 	d.selected = true;
@@ -51,9 +56,9 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	      "&attr1_clip1=" + x1 + "&attr1_clip2=" + x2 + 
 	      "&attr2_clip1=" + y1 + "&attr2_clip2=" + y2)
       .then(function(resp){
-        var mask = resp.data.mask;
-        
-        $scope.vDPlot.drawMask([mask]);
+	var mask = resp.data.mask;
+	
+	$scope.vDPlot.drawMask([mask]);
       }); 
   };
 
@@ -63,14 +68,18 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
   $http.get('/data').then(
     function(resp){
 
-      $scope.vDPlot = initializeSeismic(resp.data.image_data.amplitude,
-                                        resp.data.image_data.similarity);
+      $scope.vDPlot = initializeSeismic(resp.data.image_data.I,
+                                        resp.data.image_data.I);
       
       $scope.drag = initializeDrag();
+
       var svg = $scope.vDPlot._plot.svg();
+     
       $scope.cbar = initializeCBar(svg, resp.data.cbar1,resp.data.cbar2,
-                                  $scope.colorScale);
-      vDUpdate('amplitude', 'similarity', $scope.colorScale);
+      				   $scope.colorScale);
+      
+      vDUpdate('I', 'I', $scope.colorScale);
+      
       $scope.svg = svg;
       $scope.scatterMatrix = initializeScatterMatrix(resp.data, svg);
       $scope.scatter = initializeScatter(svg, resp.data);
@@ -79,7 +88,7 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
       $scope.data = resp.data.data;
       $scope.image_data = resp.data.image_data;
 
-      initializeOverview(resp.data);
+      // initializeOverview(resp.data);
       $scope.dummy_text = svg.append("text");
       
     });
@@ -88,18 +97,18 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 
     // Make the seismic plot
     var vDPlot = g3.plot("#container")
-          .height(500)
-          .xTitle("spatial cross-section")
-          .yTitle("")
-          .width(500)
-          .xTickFormat("")
-	  .yTickFormat("")
-          .x2TickFormat("")
-          .y2TickFormat("")
-          .margin(20,1200,1200,40)
-	  .xDomain([0,50])
-	  .yDomain([0,50])
-          .draw();
+        .height(500)
+        .xTitle("spatial cross-section")
+        .yTitle("")
+        .width(500)
+        .xTickFormat("")
+	.yTickFormat("")
+        .x2TickFormat("")
+        .y2TickFormat("")
+        .margin(20,1200,1200,40)
+	.xDomain([0,50])
+	.yDomain([0,50])
+        .draw();
 
     $scope.colorScale = d3.scale.linear()
       .range(['#FF0000', '#FFF', '#0000FF'])
@@ -117,18 +126,18 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
     
     // Make the first scatter plot
     var s1Plot = g3.plot('#scatter')
-	  .height(200)
-	  .xDomain([data.min.similarity,data.max.similarity])
-	  .yDomain([data.min.amplitude, data.max.amplitude])
-          .xTitle('similarity')
-          .yTitle('amplitude')
-	  .width(200)
-	  .xTickFormat("")
-	  .x2TickFormat("")
-	  .y2TickFormat("")
-	  .yTickFormat("")
-	  .margin(20,40,40,40)
-	  .draw();
+	.height(200)
+	.xDomain([data.min.intercept,data.max.I])
+	.yDomain([data.min.gradient, data.max.G])
+        .xTitle('intercept')
+        .yTitle('gradient')
+	.width(200)
+	.xTickFormat("")
+	.x2TickFormat("")
+	.y2TickFormat("")
+	.yTickFormat("")
+	.margin(20,40,40,40)
+	.draw();
 
     $scope.brush = d3.svg.brush()
       .extent([[0, 200], [0,200]])
@@ -137,7 +146,7 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
       .on("brushend", search);
     s1Plot.svg().append("g").attr("class", "brush").call($scope.brush);
 
-    var scatter = g3.scatter(s1Plot, data.data).draw('similarity', 'amplitude');
+    var scatter = g3.scatter(s1Plot, data.data).draw('intercept', 'gradient');
     return scatter;
   };
 
@@ -192,18 +201,18 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	var yPos = i * 60 + 20; 
 	var xPos = (i + j) * 60 + 20;
 	var plot =  g3.plot('#small_multiples')
-	      .height(50)
-	      .xDomain([resp.min[primary_attr], resp.max[primary_attr]])
-	      .yDomain([resp.min[secondary_attr], resp.max[secondary_attr]])
-	      .width(50)
-	      .y2Title(y2Title)
-	      .xTitle(xTitle)
-	      .xTickFormat("")
-	      .x2TickFormat("")
-	      .y2TickFormat("")
-	      .yTickFormat("")
-	      .margin(yPos,20, yMarg, xPos)
-	      .draw();
+	    .height(50)
+	    .xDomain([resp.min[primary_attr], resp.max[primary_attr]])
+	    .yDomain([resp.min[secondary_attr], resp.max[secondary_attr]])
+	    .width(50)
+	    .y2Title(y2Title)
+	    .xTitle(xTitle)
+	    .xTickFormat("")
+	    .x2TickFormat("")
+	    .y2TickFormat("")
+	    .yTickFormat("")
+	    .margin(yPos,20, yMarg, xPos)
+	    .draw();
 	
 	plots.push(g3.scatter(plot, data).draw(primary_attr, 
 					       secondary_attr));
@@ -296,7 +305,7 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	  var colorbar = d3.scale.linear().domain([min[attr1],
 						   max[attr1]])
 
-		.range(['black', 'white']);
+	      .range(['black', 'white']);
 
 	  var image_data = uniColorScale(data[attr1], 
 					 colorbar);
@@ -305,13 +314,13 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	  if(map_type[attr1] === "seq"){
 	    var colorbar = d3.scale.linear().domain([min[attr1],
 						     max[attr1]])
-		  .range(['green', 'white']);
+		.range(['green', 'white']);
 	    var image_data = biColorScale(data[attr1], data[attr2], 
 					  colorbar);
 	  } else{
 	    var colorbar = d3.scale.linear().domain([min[attr1]*50,0,
 						     max[attr1]*50])
-		  .range(['#FF0000', '#FFF', '#0000FF']);
+		.range(['#FF0000', '#FFF', '#0000FF']);
 
 	    var image_data = biColorScale(data[attr1], data[attr2], 
 					  colorbar);
@@ -330,19 +339,19 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
   var initializeCBar = function(svg, cmap1, cmap2, cbar){
 
     var plot = g3.plot("#container")
-          .height(75)
-          .width(75)
-          .xTickFormat("")
-          .x2Title("similarity")
-          .yTitle("amplitude")
-          .x2TickFormat("")
-          .yTickFormat("")
-          .y2TickFormat("")
-          .margin(0,0,0,550)
-	  .xDomain([0,10])
-	  .yDomain([0,10])
-          .svg(svg)
-          .draw();
+        .height(75)
+        .width(75)
+        .xTickFormat("")
+        .x2Title("gradient")
+        .yTitle("intercept")
+        .x2TickFormat("")
+        .yTickFormat("")
+        .y2TickFormat("")
+        .margin(0,0,0,550)
+	.xDomain([0,10])
+	.yDomain([0,10])
+        .svg(svg)
+        .draw();
 
     var cmap = cBarData(cmap1, cmap2, cbar);
     $scope.cAxis = plot; 
@@ -387,7 +396,7 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 	if(attr1===attr2){
 	  var data = uniColorScale(resp.data.attr1,
 				   colorbar);
-        
+	  
 	} else{
 	  var data = biColorScale(resp.data.attr1, 
 				  resp.data.attr2, 
@@ -396,12 +405,12 @@ app.controller('controller', function ($scope, $http, $alert, $timeout) {
 
 	if($scope.init){
 	  $scope.vDPlot.reDraw(data);
-          $scope.cbar.reDraw([cBarData(resp.data.cbar1, resp.data.cbar2,
-                                      colorbar)]);
+	  $scope.cbar.reDraw([cBarData(resp.data.cbar1, resp.data.cbar2,
+				       colorbar)]);
 	} else{
 	  $scope.vDPlot._data = data;
 	  $scope.vDPlot.draw();
-          $scope.init = true;
+	  $scope.init = true;
 	}
       });
     $scope.cAxis.getElement("x2Title").text(attr2);

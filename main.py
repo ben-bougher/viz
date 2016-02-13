@@ -25,14 +25,18 @@ env = Environment(loader=FileSystemLoader(join(dirname(__file__),
 
 class Viz(webapp2.RequestHandler):
 
-    attributes = ['Q', 'similarity',
-                  'amplitude', 'intercept', 'gradient']
+    attributes = ['I', 'G',
+                  'PCA1', 'PCA2',
+                  'PCA3', 'PCA4',
+                  'PCA5']
 
-    file_dict = {"similarity": "cont.npy",
-                 "amplitude": "amp_slice.npy",
-                 "gradient": "gradient.npy",
-                 "intercept": "intercept.npy",
-                 "Q": "FI.npy"}
+    file_dict = {"I": "I.np.npy",
+                 "G": "G.np.npy",
+                 "PCA1": "PCA0.np.npy",
+                 "PCA2": "PCA1.np.npy",
+                 "PCA3": "PCA2.np.npy",
+                 "PCA4": "PCA3.np.npy",
+                 "PCA5": "PCA4.np.npy"}
 
 
 class MainHandler(Viz):
@@ -52,66 +56,34 @@ class DataHandler(Viz):
 
         self.response.headers['Content-Type'] = 'application/json'
 
-        A = np.flipud(np.nan_to_num(np.load('amp_slice.npy'))).T
-        C = np.flipud(np.nan_to_num(np.load('cont.npy'))).T
-        #A /= np.amax(np.abs(A))
-
-        gradient = np.flipud(np.nan_to_num(np.load('gradient.npy'))).T
-        intercept = np.flipud(np.nan_to_num(np.load('intercept.npy'))).T
-        FI = np.flipud(np.nan_to_num(np.load('FI.npy'))).T
         output = {}
-        output["attributes"] = self.attributes
-
+        output["min"] = {}
+        output["max"] = {}
+        output["cmap"] = {}
         output["data"] = []
+        
         image_data = {}
+        for attr, filename in self.file_dict.iteritems():
+            data = np.load(filename).T[::5,::5]
+            image_data[attr] = data.tolist()
+            output["max"][attr] = float(np.amax(data))
+            output["min"][attr] = float(np.amin(data))
+            output["cmap"][attr] = "div"
+            
+   
+        output["attributes"] = self.attributes
+        output["image_data"] = image_data
 
-        image_data["amplitude"] = A[::5, ::5].tolist()
-        image_data["similarity"] = C[::5, ::5].tolist()
-        image_data["gradient"] = gradient[::5, ::5].tolist()
-        image_data["intercept"] = intercept[::5, ::5].tolist()
-        image_data["Q"] = FI[::5, ::5].tolist()
 
         output["image_data"] = image_data
         
-        output["cbar1"] = np.linspace(np.amin(A), np.amax(A), 10).tolist()
+        output["cbar1"] = np.linspace(-1, 1, 10).tolist()
         output["cbar2"] = (1 - np.linspace(0.0, 1, 10)).tolist()[::-1]
 
-        output["min"] = {"amplitude": -10*np.std(A),
-                         "similarity":0,
-                         "gradient": -10*np.std(gradient),
-                         "intercept": -1*np.std(intercept),
-                         "Q": -30*np.std(FI)}
 
-        output["max"] =  {"amplitude": 10*np.std(A),
-                         "similarity": 1,
-                         "gradient": 1*np.std(gradient),
-                         "intercept": 10*np.std(intercept),
-                         "Q": 0*np.std(FI)}
-
-        output["cmap"] =  {"amplitude": "div",
-                            "similarity": "seq",
-                            "gradient":"seq",
-                            "intercept": "seq",
-                            "Q": "seq"}
-
-        for amp, cont, grad, inter, fi in zip(A.flatten()[::50],
-                                              C.flatten()[::50],
-                                              gradient.flatten()[::50],
-                                              intercept.flatten()[::50],
-                                              FI.flatten()[::50]):
-            dic = {"amplitude": np.clip(amp, output["min"]["amplitude"],
-                                        output["max"]["amplitude"]),
-                   "similarity": np.clip(cont,output["min"]["similarity"],
-                                        output["max"]["similarity"]),
-                   "gradient": np.clip(grad,output["min"]["gradient"],
-                                       output["max"]["gradient"]),
-                   "intercept": np.clip(inter,output["min"]["intercept"],
-                                        output["max"]["intercept"]),
-                   "Q": np.clip(fi, output["min"]["Q"],
-                                     output["max"]["Q"])}
-                
-            output["data"].append(dic)
-
+        with open('features.json', 'r') as f:
+            output['data'] = json.load(f)[::20]
+            
            
                              
         self.response.out.write(json.dumps(output))
@@ -124,8 +96,8 @@ class vDHandler(Viz):
         attr1_id = self.request.get("attr1")
         attr2_id = self.request.get("attr2")
         
-        attr1 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr1_id]))).T
-        attr2 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr2_id]))).T
+        attr1 = np.nan_to_num(np.load(self.file_dict[attr1_id])).T
+        attr2 = np.nan_to_num(np.load(self.file_dict[attr2_id])).T
         
         output = {}
         output["attr1"] = attr1.tolist()
@@ -157,8 +129,8 @@ class MaskHandler(Viz):
         at2_clip1 = float(self.request.get("attr2_clip1"))
         at2_clip2 = float(self.request.get("attr2_clip2"))
 
-        attr1 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr1_id]))).T
-        attr2 = np.flipud(np.nan_to_num(np.load(self.file_dict[attr2_id]))).T
+        attr1 = np.nan_to_num(np.load(self.file_dict[attr1_id])).T
+        attr2 = np.nan_to_num(np.load(self.file_dict[attr2_id])).T
    
         x = np.zeros(attr1.shape)
         y = np.ones(attr1.shape)
