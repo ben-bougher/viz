@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+
+\bibitem{itt-sol}
+Itt visual information solutions: Envi.
+\newblock http://www.ittvis.com/ProductServices/ENVI.aspx, Jun 2010.
+
+\bibitem{multispec}
+Multispec: A freeware multispectral image data analysis system.
+\newblock https://engineering.purdue.edu/~biehl/MultiSpec/index.html, feb 2015.
+
+\bibitem{bianco-2015}
+E.~Bianco.
+\newblock Corendering attributes and 2d colourmaps.
+\newblock
+  http://www.agilegeoscience.com/blog/2015/5/27/corendering-attributes-and-2d-colourmaps,
+  May 2015.
+
+\bibitem{petrel-vid}
+Cegal.
+\newblock Easy seismic and avo analysis.
+\newblock https://www.youtube.com/watch?v=VrMYiRNF9GQ, Sept 2013.
+
+\bibitem{chopra-attr}
+S.~Chopra.
+\newblock Interpreting fractures through 3d seismic discontinuity attributes
+  and their visualization.
+\newblock {\em CSEG Recorder}, 34(8):99--108, Oct. 2009.
+
+\bibitem{fuchs-vom-2009}
+R.~Fuchs and H.~Hauser.
+\newblock Visualization of multi-variate scientific data.
+\newblock {\em Computer Graphics Forum}, 28(6):1670--1690, 2009.
+
+\bibitem{gerbil}
+E.~A. J.~Jordan.
+
+\end{thebibliography}
