@@ -1,0 +1,21 @@
+{% extends "base_template.html" %}
+
+{% block title %}GeoPhyZViZ{% endblock %}
+{% block content %}
+
+
+<div class="container" id="container">
+
+	<form type="text" action="/feedback" method="post">
+		<textarea rows="10" cols="50" name="feedback">
+Comments and suggestions
+		</textarea>
+
+		<button type="submit"> Submit</button>
+	</form>
+</div>
+
+ 
+</div>
+      
+{% endblock %}
